@@ -32,9 +32,28 @@ for(let TimeRows =0;TimeRows<24;TimeRows++){
     bodyTable.appendChild(rowElement)
     for(let timeCellls=0;timeCellls<7;timeCellls++){
         let timeCell = document.createElement('td');
+        timeCell.setAttribute('data-array-row',TimeRows);
+        timeCell.setAttribute('data-array-item',timeCellls);
+        timeCell.addEventListener('click',chnageColorOnClick);
+        timeCell.addEventListener('mouseover',chnageColorOnMouseOver);
+
         timeCell.innerText=SplitedData[TimeRows][timeCellls];
         bodyTable.children[TimeRows].appendChild(timeCell);
     }
+}
+
+function chnageColorOnMouseOver(e){
+    let firstAttribute=e.target.attributes[0].nodeValue;
+    let secondAttribute=e.target.attributes[1].nodeValue;
+    SplitedData[firstAttribute][secondAttribute]=5;
+    e.target.innerText=5
+}
+
+function chnageColorOnClick(e){
+    let firstAttribute=e.target.attributes[0].nodeValue;
+    let secondAttribute=e.target.attributes[1].nodeValue;
+    SplitedData[firstAttribute][secondAttribute]=5;
+    e.target.innerText=5
 }
 
 
