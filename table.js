@@ -54,8 +54,14 @@ function setMouseClick(boolValue){
        
 }
 
- document.querySelector('table').addEventListener('mouseup',()=>{setMouseClick(false)})
- document.querySelector('table').addEventListener('mousedown',()=>{setMouseClick(true)})
+ document.querySelector('html').addEventListener('mouseup',()=>{setMouseClick(false)})
+ document.querySelector('html').addEventListener('mousedown',()=>{setMouseClick(true)})
+
+
+ function createColor(value){
+          
+    return `hsl(${440-15*value},70%, 50%)`;
+    }
 
 function chnageColorOnMouseOver(e){
     //получаю дата-аттрибуты при клике на элемент 
@@ -63,8 +69,10 @@ function chnageColorOnMouseOver(e){
     let secondAttribute=e.target.attributes[1].nodeValue;
     //закрашиваю значения если мышь зажата
     if(isMouseClicked===true){
-        SplitedData[firstAttribute][secondAttribute]=5;
-        e.target.innerText=5
+        SplitedData[firstAttribute][secondAttribute]=slider.value;
+        e.target.innerText=slider.value
+        e.target.style.background=createColor(slider.value)
+        
     }
 }
 
@@ -72,8 +80,30 @@ function chnageColorOnClick(e){
     //получаю дата-аттрибуты при наведении  на элемент 
     let firstAttribute=e.target.attributes[0].nodeValue;
     let secondAttribute=e.target.attributes[1].nodeValue;
-    SplitedData[firstAttribute][secondAttribute]=5;
-    e.target.innerText=5
+    SplitedData[firstAttribute][secondAttribute]=slider.value;
+    e.target.style.background=createColor(slider.value)
 }
 
+
+let slider=document.querySelector('#slider');
+let round=document.querySelector('#round');
+let sliderWidth=slider.getBoundingClientRect().width;
+let roundWidth=round.getBoundingClientRect().width
+
+
+slider.addEventListener('mousemove',(e)=>{
+    e.stopPropagation();   
+    let maxValue=slider.getAttribute("data-max")*1
+    let minValue=slider.getAttribute("data-min")*1
+    let step=slider.getAttribute("data-step")*1
+    let range=maxValue-minValue;
+    let persantegeOfsliderFill=e.offsetX/sliderWidth
+    
+    if(isMouseClicked){
+        slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
+        round.style.transform="translate("+(e.offsetX-roundWidth/2)+"px,0)" 
+        
+    }
+    
+})
 
