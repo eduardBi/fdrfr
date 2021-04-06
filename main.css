@@ -9,9 +9,7 @@
   
 }
 
-:root{
-  
-}
+
 
 table{
     border-collapse:collapse;
@@ -22,8 +20,12 @@ table{
 
 td{
   border: 2px solid white;
-  text-indent: 10px;
-  line-height: 1.5em;
+  color: white;
+  
+  
+  background: rgb(38, 217, 98);
+  text-align: center;
+  
 }
 
 

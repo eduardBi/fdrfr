@@ -1,6 +1,10 @@
 let data=[];
+
+let tablesData=[[],[]];
+
+
 //заполняю массив
-(function pololirizeData(){
+(function populirizeData(){
     for(let i =0;i<168;i++){
         data.push(22);
     }
@@ -16,7 +20,6 @@ let SplitedData=[];
         if(i===0||i%7===0){
             RowIndex++;
             SplitedData.push([]);
-            console.log('increased');
             SplitedData[RowIndex].push(data[i]);
             
         }else{
@@ -27,7 +30,8 @@ let SplitedData=[];
     console.log(SplitedData)
 })()
 
-let bodyTable=document.querySelector('#tbody')
+let bodyTable=document.querySelector('#tbody');
+
 for(let TimeRows =0;TimeRows<24;TimeRows++){
     //добавляю ряд в таблицу
     let rowElement = document.createElement('tr')
@@ -37,6 +41,7 @@ for(let TimeRows =0;TimeRows<24;TimeRows++){
         let timeCell = document.createElement('td');
         timeCell.setAttribute('data-array-row',TimeRows);
         timeCell.setAttribute('data-array-item',timeCellls);
+        timeCell.style.background=createColor(20);
         //события для изменения значения и цвета 
         timeCell.addEventListener('click',chnageColorOnClick);
         timeCell.addEventListener('mouseover',chnageColorOnMouseOver);
@@ -49,7 +54,7 @@ let isMouseClicked=false;
 //проверяю зажата ли кнопка мыши
 
 function setMouseClick(boolValue){
-        console.log(isMouseClicked)
+
        return isMouseClicked=boolValue
        
 }
@@ -70,8 +75,9 @@ function chnageColorOnMouseOver(e){
     //закрашиваю значения если мышь зажата
     if(isMouseClicked===true){
         SplitedData[firstAttribute][secondAttribute]=slider.value;
-        e.target.innerText=slider.value
-        e.target.style.background=createColor(slider.value)
+        e.target.innerText=tablesData[currentArray].tabletemperature
+        e.target.style.background=createColor(tablesData[currentArray].tabletemperature)
+        
         
     }
 }
@@ -85,25 +91,72 @@ function chnageColorOnClick(e){
 }
 
 
-let slider=document.querySelector('#slider');
-let round=document.querySelector('#round');
-let sliderWidth=slider.getBoundingClientRect().width;
-let roundWidth=round.getBoundingClientRect().width
 
 
-slider.addEventListener('mousemove',(e)=>{
-    e.stopPropagation();   
-    let maxValue=slider.getAttribute("data-max")*1
-    let minValue=slider.getAttribute("data-min")*1
-    let step=slider.getAttribute("data-step")*1
-    let range=maxValue-minValue;
-    let persantegeOfsliderFill=e.offsetX/sliderWidth
+let sliders=document.querySelectorAll('#slider');
+
+for (let index = 0; index < slider.length; index++) {
+            let slider=sliders[index];
+            let round=slider.children[0];
+            let roundWidth=round.getBoundingClientRect().width
+            let sliderWidth=slider.getBoundingClientRect().width-roundWidth;
+            slider.addEventListener('mousemove',(e)=>{
+            e.stopPropagation();   
+            let maxValue=slider.getAttribute("data-max")*1
+            let minValue=slider.getAttribute("data-min")*1
+            let step=slider.getAttribute("data-step")*1
+            let range=maxValue-minValue;
+            let persantegeOfsliderFill=e.offsetX/sliderWidth 
+            console.log('dawd')
+            if(isMouseClicked){
+                slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
+                tablesData[currentArray]={...tablesData[currentArray],[slider.getAttribute('name')]:slider.value}
+                console.log(tablesData);
+                round.style.transform="translate("+(e.offsetX-roundWidth/2)+"%,0)" 
+                
+            }
+            
+        })
     
-    if(isMouseClicked){
-        slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
-        round.style.transform="translate("+(e.offsetX-roundWidth/2)+"px,0)" 
-        
+}
+
+
+let SecondBody=document.querySelector('#tbody1');
+
+for(let TimeRows =0;TimeRows<24;TimeRows++){
+    //добавляю ряд в таблицу
+    let rowElement = document.createElement('tr')
+    SecondBody.appendChild(rowElement)
+    for(let timeCellls=0;timeCellls<7;timeCellls++){
+        //добавляю строку и аттрибутты по которым я буду выбитать элемент
+        let timeCell = document.createElement('td');
+        timeCell.setAttribute('data-array-row',TimeRows);
+        timeCell.setAttribute('data-array-item',timeCellls);
+        timeCell.style.background=createColor(20);
+        //события для изменения значения и цвета 
+        timeCell.addEventListener('click',chnageColorOnClick);
+        timeCell.addEventListener('mouseover',chnageColorOnMouseOver);
+        //добавляю модифицированные элементы 
+        timeCell.innerText=SplitedData[TimeRows][timeCellls];
+        SecondBody.children[TimeRows].appendChild(timeCell);
     }
+}
+
+
+
+let currentArray;
+
+let tables=document.querySelectorAll('section');
+
+for (let tableItem = 0; tableItem < tables.length; tableItem++) {
+    tables[tableItem].addEventListener('mouseover',(e)=>{
+        e.stopPropagation()
+        return currentArray=e.currentTarget.getAttribute('data-table-id')*1
+    })
     
-})
+}
+
+
+
+
 
