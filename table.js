@@ -157,6 +157,33 @@ for (let tableItem = 0; tableItem < tables.length; tableItem++) {
 }
 
 
+let counters=document.querySelectorAll('#counterRow>.counter-row');
+for (let counterIndex = 0; counterIndex < counters.length; counterIndex++) {
+    counters[counterIndex].addEventListener('click',(e)=>{
+
+        for (let chooserItem = 0; chooserItem < counters.length; chooserItem++) {
+            e.stopPropagation();
+            let newElement=document.createElement('div')
+            newElement.setAttribute('style','left:'+chooserItem*20+'%'+';top:-100%;')
+            newElement.setAttribute('class','counter-row-item')
+            newElement.innerHTML=chooserItem;
+            let title=e.target.innerHTML;
+
+            newElement.addEventListener('click',(e)=>{
+                tablesData[currentArray]={...tablesData[currentArray],[title]:e.target.innerHTML}
+                console.log(tablesData)
+                e.stopPropagation();
+                console.log(counters[counterIndex])
+                counters[counterIndex].remove()
+            })
+            counters[counterIndex].appendChild(newElement)
+            
+            
+        }
+        
+    })
+    
+}
 
 
 

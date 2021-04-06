@@ -53,3 +53,23 @@ td{
   display: flex;
 }
 
+#counterRow .counter-row .counter-row-title {
+  width: 50px;
+  height: 50px;
+  background: red;
+  border-radius: 50%;
+}
+#counterRow .counter-row{
+  position: relative;
+  display: flex;
+  width: 500px;
+}
+
+#counterRow .counter-row .counter-row-item{
+
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: blue;
+  border-radius: 50%;
+}
