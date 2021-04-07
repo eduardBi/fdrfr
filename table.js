@@ -65,22 +65,52 @@ function setMouseClick(boolValue){
 
 
 document.querySelector('#addWindowComtrol').addEventListener('click',()=>{
+    //заполняю секцию 
     tablesData.push([]);
     let section=document.createElement('section');
     section.setAttribute('data-table-id',tablesData.length)
     let mainSection=document.querySelector('main')
     mainSection.appendChild(section)
     generateTable(section);
+    generateSlider()
 })
 
+
+
+function generateSlider(){
+    let appendSliderTo =document.querySelector('main');
+    let SliderWrapper=document.createElement('div');
+    SliderWrapper.setAttribute('name','tabletemperature')
+    SliderWrapper.setAttribute('class','slider')
+    SliderWrapper.setAttribute('data-max','50')
+    SliderWrapper.setAttribute('data-min','70')
+    SliderWrapper.setAttribute('id','slider')
+
+    let sliderRound=document.createElement('div');
+    sliderRound.setAttribute('id','round')
+    sliderRound.setAttribute('class','round')
+
+    let sliderValue=document.createElement('div');
+    sliderRound.setAttribute('id','round')
+    sliderRound.setAttribute('class','round')
+    
+    sliderRound.appendChild(sliderValue);
+    SliderWrapper.appendChild(sliderRound);
+    appendSliderTo.appendChild(SliderWrapper)
+    
+}
+
+
 function generateTable(sectionElement){
+    //заполняю таблицу
     let tabelsWrapper=document.createElement('div');
     tabelsWrapper.setAttribute('class','tables-wrapper');
     let tableTime=document.createElement('table');
-    table.tableTime='<table ><tbody><tr><td>1:00</td></tr><tr><td>2:00</td></tr><tr><td>3:00</td></tr><tr><td>1</td></tr><tr><td>1</td></tr><tr><td>1</td></tr><tr><td>1</td></tr></tbody></table>';
-    console.log(tableTime)
+    tableTime.innerHTML='<table ><tbody><tr><td>1:00</td></tr><tr><td>2:00</td></tr><tr><td>3:00</td></tr><tr><td>1</td></tr><tr><td>1</td></tr><tr><td>1</td></tr><tr><td>1</td></tr></tbody></table>';
+    //заполняю статическое время
     let tableData=document.createElement('table');
     tableData.innerHTML=' <thead><tr><td>пн</td><td>вт</td><td>ср</td><td>чт</td><td>пт</td><td>сб</td><td>вс</td></tr></thead><tbody id="tbody"></tbody>';
+    //заполняю статические дни недели
     tabelsWrapper.appendChild(tableTime);
     
     for(let TimeRows =0;TimeRows<24;TimeRows++){
@@ -103,9 +133,9 @@ function generateTable(sectionElement){
     }
     tabelsWrapper.appendChild(tableData)
     sectionElement.appendChild(tabelsWrapper)
-    
-    
 }
+
+
 
  function createColor(value){
           
@@ -151,6 +181,7 @@ for (let index = 0; index < slider.length; index++) {
             let step=slider.getAttribute("data-step")*1
             let range=maxValue-minValue;
             let persantegeOfsliderFill=e.offsetX/sliderWidth 
+            console.log(tablesData)
             
             if(isMouseClicked){
                 slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
@@ -193,7 +224,7 @@ let currentArray;
 let tables=document.querySelectorAll('section');
 
 for (let tableItem = 0; tableItem < tables.length; tableItem++) {
-    console.log(currentArray)
+    
     tables[tableItem].addEventListener('mouseover',(e)=>{
         e.stopPropagation()
         return currentArray=e.currentTarget.getAttribute('data-table-id')*1
