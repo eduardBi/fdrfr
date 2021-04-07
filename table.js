@@ -97,6 +97,33 @@ function generateSlider(){
     sliderRound.appendChild(sliderValue);
     SliderWrapper.appendChild(sliderRound);
     appendSliderTo.appendChild(SliderWrapper)
+
+
+
+    let slider=sliders[index];
+            let round=slider.children[0];
+            let roundWidth=round.getBoundingClientRect().width
+            let sliderWidth=slider.getBoundingClientRect().width-roundWidth;
+            slider.addEventListener('mousemove',(e)=>{
+            e.stopPropagation();   
+            let maxValue=slider.getAttribute("data-max")*1
+            let minValue=slider.getAttribute("data-min")*1
+            let step=slider.getAttribute("data-step")*1
+            let range=maxValue-minValue;
+            let persantegeOfsliderFill=e.offsetX/sliderWidth 
+            console.log(tablesData)
+            
+            if(isMouseClicked){
+                slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
+                tablesData[currentArray]={...tablesData[currentArray],[slider.getAttribute('name')]:slider.value}
+                
+                round.style.transform="translate("+(e.offsetX-roundWidth/2)+"px,0)" 
+                
+            }
+            
+        })
+
+
     
 }
 
