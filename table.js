@@ -10,6 +10,7 @@ let tablesData=[[],[]];
     }
 })();
 
+
 let SplitedData=[];
 //разделяю массив
 (function splitedData(){
@@ -27,7 +28,7 @@ let SplitedData=[];
         }
 
     }
-    console.log(SplitedData)
+    
 })()
 
 let bodyTable=document.querySelector('#tbody');
@@ -59,9 +60,52 @@ function setMouseClick(boolValue){
        
 }
 
- document.querySelector('html').addEventListener('mouseup',()=>{setMouseClick(false)})
- document.querySelector('html').addEventListener('mousedown',()=>{setMouseClick(true)})
+ document.querySelector('html').addEventListener('mouseup',()=>{setMouseClick(false)});
+ document.querySelector('html').addEventListener('mousedown',()=>{setMouseClick(true)});
 
+
+document.querySelector('#addWindowComtrol').addEventListener('click',()=>{
+    tablesData.push([]);
+    let section=document.createElement('section');
+    section.setAttribute('data-table-id',tablesData.length)
+    let mainSection=document.querySelector('main')
+    mainSection.appendChild(section)
+    generateTable(section);
+})
+
+function generateTable(sectionElement){
+    let tabelsWrapper=document.createElement('div');
+    tabelsWrapper.setAttribute('class','tables-wrapper');
+    let tableTime=document.createElement('table');
+    table.tableTime='<table ><tbody><tr><td>1:00</td></tr><tr><td>2:00</td></tr><tr><td>3:00</td></tr><tr><td>1</td></tr><tr><td>1</td></tr><tr><td>1</td></tr><tr><td>1</td></tr></tbody></table>';
+    console.log(tableTime)
+    let tableData=document.createElement('table');
+    tableData.innerHTML=' <thead><tr><td>пн</td><td>вт</td><td>ср</td><td>чт</td><td>пт</td><td>сб</td><td>вс</td></tr></thead><tbody id="tbody"></tbody>';
+    tabelsWrapper.appendChild(tableTime);
+    
+    for(let TimeRows =0;TimeRows<24;TimeRows++){
+        //добавляю ряд в таблицу
+        let rowElement = document.createElement('tr')
+        tableData.children[1].appendChild(rowElement)
+        for(let timeCellls=0;timeCellls<7;timeCellls++){
+            //добавляю строку и аттрибутты по которым я буду выбитать элемент
+            let timeCell = document.createElement('td');
+            timeCell.setAttribute('data-array-row',TimeRows);
+            timeCell.setAttribute('data-array-item',timeCellls);
+            timeCell.style.background=createColor(20);
+            //события для изменения значения и цвета 
+            timeCell.addEventListener('click',chnageColorOnClick);
+            timeCell.addEventListener('mouseover',chnageColorOnMouseOver);
+            //добавляю модифицированные элементы 
+            timeCell.innerText=SplitedData[TimeRows][timeCellls];
+            tableData.children[1].children[TimeRows].appendChild(timeCell);
+        }
+    }
+    tabelsWrapper.appendChild(tableData)
+    sectionElement.appendChild(tabelsWrapper)
+    
+    
+}
 
  function createColor(value){
           
@@ -107,12 +151,12 @@ for (let index = 0; index < slider.length; index++) {
             let step=slider.getAttribute("data-step")*1
             let range=maxValue-minValue;
             let persantegeOfsliderFill=e.offsetX/sliderWidth 
-            console.log('dawd')
+            
             if(isMouseClicked){
                 slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
                 tablesData[currentArray]={...tablesData[currentArray],[slider.getAttribute('name')]:slider.value}
-                console.log(tablesData);
-                round.style.transform="translate("+(e.offsetX-roundWidth/2)+"%,0)" 
+                
+                round.style.transform="translate("+(e.offsetX-roundWidth/2)+"px,0)" 
                 
             }
             
@@ -149,6 +193,7 @@ let currentArray;
 let tables=document.querySelectorAll('section');
 
 for (let tableItem = 0; tableItem < tables.length; tableItem++) {
+    console.log(currentArray)
     tables[tableItem].addEventListener('mouseover',(e)=>{
         e.stopPropagation()
         return currentArray=e.currentTarget.getAttribute('data-table-id')*1
@@ -158,13 +203,26 @@ for (let tableItem = 0; tableItem < tables.length; tableItem++) {
 
 
 let counters=document.querySelectorAll('#counterRow>.counter-row');
+let countersAction=[
+    {
+        text:'delete',
+        color:'red'
+    },{
+        text:'counter one',
+        color:'green'
+    },{
+        text:'counter three',
+        color:'green'
+    }
+]
+
 for (let counterIndex = 0; counterIndex < counters.length; counterIndex++) {
     counters[counterIndex].addEventListener('click',(e)=>{
 
-        for (let chooserItem = 0; chooserItem < counters.length; chooserItem++) {
+        for (let chooserItem = 0; chooserItem < countersAction.length; chooserItem++) {
             e.stopPropagation();
             let newElement=document.createElement('div')
-            newElement.setAttribute('style','left:'+chooserItem*20+'%'+';top:-100%;')
+            newElement.setAttribute('style','left:'+chooserItem*20+'%'+';top:-100%;'+'background:'+countersAction[chooserItem].color+';')
             newElement.setAttribute('class','counter-row-item')
             newElement.innerHTML=chooserItem;
             let title=e.target.innerHTML;
@@ -173,12 +231,14 @@ for (let counterIndex = 0; counterIndex < counters.length; counterIndex++) {
                 tablesData[currentArray]={...tablesData[currentArray],[title]:e.target.innerHTML}
                 console.log(tablesData)
                 e.stopPropagation();
-                console.log(counters[counterIndex])
-                counters[counterIndex].remove()
+                
+                counters[counterIndex].children[0].innerHTML=e.target.innerHTML  
+                counters[counterIndex].children[1].innerHTML=''
+                
+                
             })
-            counters[counterIndex].appendChild(newElement)
-            
-            
+
+            counters[counterIndex].children[1].appendChild(newElement)
         }
         
     })

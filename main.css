@@ -49,7 +49,7 @@ td{
   background: pink;
 }
 
-.tableSome{
+.tables-wrapper{
   display: flex;
 }
 
@@ -72,4 +72,11 @@ td{
   height: 50px;
   background: blue;
   border-radius: 50%;
+}
+
+
+section {
+  height: 100vh;
+  width: 100vw;
+  background: gray;
 }
