@@ -1,16 +1,5 @@
-let data=[];
 
-let tablesData=[[]];
-
-
-//заполняю массив
-(function populirizeData(){
-    for(let i =0;i<168;i++){
-        data.push(22);
-    }
-})();
-
-//разделяю массив
+let tablesData=[];
 
 let isMouseClicked=false;
 //проверяю зажата ли кнопка мыши
@@ -27,10 +16,12 @@ function setMouseClick(boolValue){
 
 document.querySelector('#addWindowComtrol').addEventListener('click',()=>{
     //заполняю секцию 
+    currentArray=tablesData.length;
     tablesData.push([]);
     let section=document.createElement('section');
     section.setAttribute('data-table-id',tablesData.length)
-    let mainSection=document.querySelector('main')
+    let mainSection=document.querySelector('main');
+    
     mainSection.appendChild(section)
     generateTable(section);
     generateSlider()
@@ -58,22 +49,7 @@ function generateSlider(){
     sliderRound.appendChild(sliderValue);
     SliderWrapper.appendChild(sliderRound);
     appendSliderTo.appendChild(SliderWrapper)
-    (function splitedData(){
-        //генерирую массив с рядом в 7 элементов 
-        let RowIndex=-1;
-        for(let i =0; i<data.length;i++){
-            
-            if(i===0||i%7===0){
-                RowIndex++;
-                tablesData[currentArray].TimeTable.push([]);
-                tablesData[currentArray].TimeTable[RowIndex].push(data[i]);
-            }else{
-                tablesData[currentArray].TimeTable[RowIndex].push(data[i]);
-            }
-    
-        }
-        
-    })()
+   
 
     let slider=SliderWrapper;
             let round=slider.children[0];
@@ -86,7 +62,7 @@ function generateSlider(){
             let step=slider.getAttribute("data-step")*1
             let range=maxValue-minValue;
             let persantegeOfsliderFill=e.offsetX/sliderWidth 
-            console.log(tablesData[currentArray])
+            console.log(tablesData)
             
             if(isMouseClicked){
                 slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
@@ -103,6 +79,7 @@ function generateSlider(){
 
 
 function generateTable(sectionElement){
+     tablesData[currentArray].TimeTable=[]
     //заполняю таблицу
     let tabelsWrapper=document.createElement('div');
     tabelsWrapper.setAttribute('class','tables-wrapper');
@@ -114,7 +91,36 @@ function generateTable(sectionElement){
     //заполняю статические дни недели
     tabelsWrapper.appendChild(tableTime);
     //tablesData[]
+        
+    let data=[];
+    //заполняю массив
+    (function populirizeData(){
+        for(let i =0;i<168;i++){
+            data.push(22);
+        }
+    })();
+    console.log(data);
     
+    
+    (function splitedData(){
+        
+        //генерирую массив с рядом в 7 элементов 
+        let RowIndex=-1;
+        for(let i =0; i<data.length;i++){
+            
+            if(i===0||i%7===0){
+                RowIndex++;
+                tablesData[currentArray].TimeTable.push([]);
+                tablesData[currentArray].TimeTable[RowIndex].push(data[i]);
+            }else{
+                tablesData[currentArray].TimeTable[RowIndex].push(data[i]);
+            }
+    
+        }
+        
+    })();
+   
+
     for(let TimeRows =0;TimeRows<24;TimeRows++){
         //добавляю ряд в таблицу
         let rowElement = document.createElement('tr')
@@ -129,7 +135,7 @@ function generateTable(sectionElement){
             timeCell.addEventListener('click',chnageColorOnClick);
             timeCell.addEventListener('mouseover',chnageColorOnMouseOver);
             //добавляю модифицированные элементы 
-            timeCell.innerText=tablesData[0].TimeTable[TimeRows][timeCellls];
+            timeCell.innerText=tablesData[currentArray].TimeTable[TimeRows][timeCellls];
             tableData.children[1].children[TimeRows].appendChild(timeCell);
         }
     }
@@ -150,11 +156,9 @@ function chnageColorOnMouseOver(e){
     let secondAttribute=e.target.attributes[1].nodeValue;
     //закрашиваю значения если мышь зажата
     if(isMouseClicked===true){
-        SplitedData[firstAttribute][secondAttribute]=slider.value;
+        tablesData[currentArray].TimeTable[firstAttribute][secondAttribute]=slider.value;
         e.target.innerText=tablesData[currentArray].tabletemperature
-        e.target.style.background=createColor(tablesData[currentArray].tabletemperature)
-        
-        
+        e.target.style.background=createColor(tablesData[currentArray].tabletemperature)       
     }
 }
 
@@ -162,7 +166,7 @@ function chnageColorOnClick(e){
     //получаю дата-аттрибуты при наведении  на элемент 
     let firstAttribute=e.target.attributes[0].nodeValue;
     let secondAttribute=e.target.attributes[1].nodeValue;
-    SplitedData[firstAttribute][secondAttribute]=slider.value;
+    tablesData[currentArray].TimeTable[firstAttribute][secondAttribute]=slider.value;
     e.target.style.background=createColor(slider.value)
 }
 
