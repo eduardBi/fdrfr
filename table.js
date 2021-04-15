@@ -1,6 +1,6 @@
 let data=[];
 
-let tablesData=[[],[]];
+let tablesData=[[]];
 
 
 //заполняю массив
@@ -10,47 +10,8 @@ let tablesData=[[],[]];
     }
 })();
 
-
-let SplitedData=[];
 //разделяю массив
-(function splitedData(){
-    //генерирую массив с рядом в 7 элементов 
-    let RowIndex=-1;
-    for(let i =0; i<data.length;i++){
-        
-        if(i===0||i%7===0){
-            RowIndex++;
-            SplitedData.push([]);
-            SplitedData[RowIndex].push(data[i]);
-            
-        }else{
-            SplitedData[RowIndex].push(data[i]);
-        }
 
-    }
-    
-})()
-
-let bodyTable=document.querySelector('#tbody');
-
-for(let TimeRows =0;TimeRows<24;TimeRows++){
-    //добавляю ряд в таблицу
-    let rowElement = document.createElement('tr')
-    bodyTable.appendChild(rowElement)
-    for(let timeCellls=0;timeCellls<7;timeCellls++){
-        //добавляю строку и аттрибутты по которым я буду выбитать элемент
-        let timeCell = document.createElement('td');
-        timeCell.setAttribute('data-array-row',TimeRows);
-        timeCell.setAttribute('data-array-item',timeCellls);
-        timeCell.style.background=createColor(20);
-        //события для изменения значения и цвета 
-        timeCell.addEventListener('click',chnageColorOnClick);
-        timeCell.addEventListener('mouseover',chnageColorOnMouseOver);
-        //добавляю модифицированные элементы 
-        timeCell.innerText=SplitedData[TimeRows][timeCellls];
-        bodyTable.children[TimeRows].appendChild(timeCell);
-    }
-}
 let isMouseClicked=false;
 //проверяю зажата ли кнопка мыши
 
@@ -97,10 +58,24 @@ function generateSlider(){
     sliderRound.appendChild(sliderValue);
     SliderWrapper.appendChild(sliderRound);
     appendSliderTo.appendChild(SliderWrapper)
+    (function splitedData(){
+        //генерирую массив с рядом в 7 элементов 
+        let RowIndex=-1;
+        for(let i =0; i<data.length;i++){
+            
+            if(i===0||i%7===0){
+                RowIndex++;
+                tablesData[currentArray].TimeTable.push([]);
+                tablesData[currentArray].TimeTable[RowIndex].push(data[i]);
+            }else{
+                tablesData[currentArray].TimeTable[RowIndex].push(data[i]);
+            }
+    
+        }
+        
+    })()
 
-
-
-    let slider=sliders[index];
+    let slider=SliderWrapper;
             let round=slider.children[0];
             let roundWidth=round.getBoundingClientRect().width
             let sliderWidth=slider.getBoundingClientRect().width-roundWidth;
@@ -111,12 +86,11 @@ function generateSlider(){
             let step=slider.getAttribute("data-step")*1
             let range=maxValue-minValue;
             let persantegeOfsliderFill=e.offsetX/sliderWidth 
-            console.log(tablesData)
+            console.log(tablesData[currentArray])
             
             if(isMouseClicked){
                 slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
                 tablesData[currentArray]={...tablesData[currentArray],[slider.getAttribute('name')]:slider.value}
-                
                 round.style.transform="translate("+(e.offsetX-roundWidth/2)+"px,0)" 
                 
             }
@@ -139,6 +113,7 @@ function generateTable(sectionElement){
     tableData.innerHTML=' <thead><tr><td>пн</td><td>вт</td><td>ср</td><td>чт</td><td>пт</td><td>сб</td><td>вс</td></tr></thead><tbody id="tbody"></tbody>';
     //заполняю статические дни недели
     tabelsWrapper.appendChild(tableTime);
+    //tablesData[]
     
     for(let TimeRows =0;TimeRows<24;TimeRows++){
         //добавляю ряд в таблицу
@@ -154,7 +129,7 @@ function generateTable(sectionElement){
             timeCell.addEventListener('click',chnageColorOnClick);
             timeCell.addEventListener('mouseover',chnageColorOnMouseOver);
             //добавляю модифицированные элементы 
-            timeCell.innerText=SplitedData[TimeRows][timeCellls];
+            timeCell.innerText=tablesData[0].TimeTable[TimeRows][timeCellls];
             tableData.children[1].children[TimeRows].appendChild(timeCell);
         }
     }
@@ -194,55 +169,6 @@ function chnageColorOnClick(e){
 
 
 
-let sliders=document.querySelectorAll('#slider');
-
-for (let index = 0; index < slider.length; index++) {
-            let slider=sliders[index];
-            let round=slider.children[0];
-            let roundWidth=round.getBoundingClientRect().width
-            let sliderWidth=slider.getBoundingClientRect().width-roundWidth;
-            slider.addEventListener('mousemove',(e)=>{
-            e.stopPropagation();   
-            let maxValue=slider.getAttribute("data-max")*1
-            let minValue=slider.getAttribute("data-min")*1
-            let step=slider.getAttribute("data-step")*1
-            let range=maxValue-minValue;
-            let persantegeOfsliderFill=e.offsetX/sliderWidth 
-            console.log(tablesData)
-            
-            if(isMouseClicked){
-                slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
-                tablesData[currentArray]={...tablesData[currentArray],[slider.getAttribute('name')]:slider.value}
-                
-                round.style.transform="translate("+(e.offsetX-roundWidth/2)+"px,0)" 
-                
-            }
-            
-        })
-    
-}
-
-
-let SecondBody=document.querySelector('#tbody1');
-
-for(let TimeRows =0;TimeRows<24;TimeRows++){
-    //добавляю ряд в таблицу
-    let rowElement = document.createElement('tr')
-    SecondBody.appendChild(rowElement)
-    for(let timeCellls=0;timeCellls<7;timeCellls++){
-        //добавляю строку и аттрибутты по которым я буду выбитать элемент
-        let timeCell = document.createElement('td');
-        timeCell.setAttribute('data-array-row',TimeRows);
-        timeCell.setAttribute('data-array-item',timeCellls);
-        timeCell.style.background=createColor(20);
-        //события для изменения значения и цвета 
-        timeCell.addEventListener('click',chnageColorOnClick);
-        timeCell.addEventListener('mouseover',chnageColorOnMouseOver);
-        //добавляю модифицированные элементы 
-        timeCell.innerText=SplitedData[TimeRows][timeCellls];
-        SecondBody.children[TimeRows].appendChild(timeCell);
-    }
-}
 
 
 
