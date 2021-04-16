@@ -62,7 +62,7 @@ function generateSlider(){
             let step=slider.getAttribute("data-step")*1
             let range=maxValue-minValue;
             let persantegeOfsliderFill=e.offsetX/sliderWidth 
-            console.log(tablesData)
+            
             
             if(isMouseClicked){
                 slider.value=Math.floor(minValue+persantegeOfsliderFill*range) 
@@ -79,7 +79,8 @@ function generateSlider(){
 
 
 function generateTable(sectionElement){
-     tablesData[currentArray].TimeTable=[]
+     tablesData[currentArray].TimeTable=[];
+     tablesData[currentArray].tabletemperature=25
     //заполняю таблицу
     let tabelsWrapper=document.createElement('div');
     tabelsWrapper.setAttribute('class','tables-wrapper');
@@ -92,34 +93,13 @@ function generateTable(sectionElement){
     tabelsWrapper.appendChild(tableTime);
     //tablesData[]
         
-    let data=[];
+    
     //заполняю массив
     (function populirizeData(){
         for(let i =0;i<168;i++){
-            data.push(22);
+            tablesData[currentArray].TimeTable.push(22);
         }
     })();
-    console.log(data);
-    
-    
-    (function splitedData(){
-        
-        //генерирую массив с рядом в 7 элементов 
-        let RowIndex=-1;
-        for(let i =0; i<data.length;i++){
-            
-            if(i===0||i%7===0){
-                RowIndex++;
-                tablesData[currentArray].TimeTable.push([]);
-                tablesData[currentArray].TimeTable[RowIndex].push(data[i]);
-            }else{
-                tablesData[currentArray].TimeTable[RowIndex].push(data[i]);
-            }
-    
-        }
-        
-    })();
-   
 
     for(let TimeRows =0;TimeRows<24;TimeRows++){
         //добавляю ряд в таблицу
@@ -135,7 +115,7 @@ function generateTable(sectionElement){
             timeCell.addEventListener('click',chnageColorOnClick);
             timeCell.addEventListener('mouseover',chnageColorOnMouseOver);
             //добавляю модифицированные элементы 
-            timeCell.innerText=tablesData[currentArray].TimeTable[TimeRows][timeCellls];
+            timeCell.innerText=tablesData[currentArray].TimeTable[TimeRows+timeCellls];
             tableData.children[1].children[TimeRows].appendChild(timeCell);
         }
     }
@@ -152,11 +132,12 @@ function generateTable(sectionElement){
 
 function chnageColorOnMouseOver(e){
     //получаю дата-аттрибуты при клике на элемент 
-    let firstAttribute=e.target.attributes[0].nodeValue;
-    let secondAttribute=e.target.attributes[1].nodeValue;
+    let firstAttribute=e.target.attributes[0].nodeValue*1;
+    let secondAttribute=e.target.attributes[1].nodeValue*1;
     //закрашиваю значения если мышь зажата
     if(isMouseClicked===true){
-        tablesData[currentArray].TimeTable[firstAttribute][secondAttribute]=slider.value;
+        tablesData[currentArray].TimeTable[firstAttribute*7+secondAttribute]=tablesData[currentArray].tabletemperature;
+        
         e.target.innerText=tablesData[currentArray].tabletemperature
         e.target.style.background=createColor(tablesData[currentArray].tabletemperature)       
     }
@@ -164,10 +145,11 @@ function chnageColorOnMouseOver(e){
 
 function chnageColorOnClick(e){
     //получаю дата-аттрибуты при наведении  на элемент 
-    let firstAttribute=e.target.attributes[0].nodeValue;
-    let secondAttribute=e.target.attributes[1].nodeValue;
-    tablesData[currentArray].TimeTable[firstAttribute][secondAttribute]=slider.value;
+    let firstAttribute=e.target.attributes[0].nodeValue*1;
+    let secondAttribute=e.target.attributes[1].nodeValue*1;
+    tablesData[currentArray].TimeTable[firstAttribute*7+secondAttribute]=tablesData[currentArray].tabletemperature;
     e.target.style.background=createColor(slider.value)
+    console.log(tablesData)
 }
 
 
@@ -222,8 +204,6 @@ for (let counterIndex = 0; counterIndex < counters.length; counterIndex++) {
                 
                 counters[counterIndex].children[0].innerHTML=e.target.innerHTML  
                 counters[counterIndex].children[1].innerHTML=''
-                
-                
             })
 
             counters[counterIndex].children[1].appendChild(newElement)
